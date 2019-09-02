@@ -2,10 +2,23 @@
   "name": "wikitongues-make-vid",
   "version": "3.0.0",
   "description": "Wikitongues Oral History Template Instantiator",
-  "main": "index.js",
+  "main": "mkvid.sh",
+  "dependencies": {
+    "airtable": "^0.7.0",
+    "dotenv": "^8.0.0"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Frederico Andrade",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wikitongues/Oral-History-Template-Instantiator"
+  },
+  "author": "Kamille Johnson, Freddie Andrade, Airtable",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wikitongues/Airtable-API/issues"
+  },
+  "homepage": "https://github.com/wikitongues/Oral-History-Template-Instantiator#readme"
 }
