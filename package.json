@@ -1,0 +1,11 @@
+{
+  "name": "wikitongues-make-vid",
+  "version": "3.0.0",
+  "description": "Wikitongues Oral History Template Instantiator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Frederico Andrade",
+  "license": "ISC"
+}
