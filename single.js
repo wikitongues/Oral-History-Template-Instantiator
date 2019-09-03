@@ -7,8 +7,6 @@ var single = process.argv[2];
 var base = new Airtable({apiKey: process.env.APIKEY}).base(process.env.BASE);
 
 base('🍩 Oral Histories').select({
-    // Selecting the first 3 records in Worksheet:
-    // maxRecords: 3,
     view: ".LOCMetadataView",
     cellFormat: "string",
     timeZone: "America/New_York",
@@ -31,8 +29,7 @@ base('🍩 Oral Histories').select({
       "Wiki Commons URL"
     ]
 }).eachPage(function page(records, fetchNextPage) {
-    // This function (`page`) will get called for each page of records.
-
+  if (!Array.isArray(records) || !!records.length) {
     records.forEach(function(record) {
         const content = [`Metadata for ${record.get('IDv2')}
 
@@ -54,14 +51,11 @@ Wikimedia Status: ${record.get('Wikimedia Status')}
 Wiki Commons URL: ${record.get('Wiki Commons URL')}`]
 
         fs.writeFileSync(`${single}/${record.get('IDv2')}__metadata.txt`, content);
-        console.log('wrote', record.get('IDv2'));
     });
-
-    // To fetch the next page of records, call `fetchNextPage`.
-    // If there are more records, `page` will get called again.
-    // If there are no more records, `done` will get called.
     fetchNextPage();
-
+  } else {
+    console.log(`Warning! ID '${single}' not found on airtable.`)
+  }
 }, function done(err) {
     if (err) { console.error(err); return; }
 });

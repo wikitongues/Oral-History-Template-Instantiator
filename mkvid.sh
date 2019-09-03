@@ -1,27 +1,34 @@
 #!/bin/bash
 # Version 3.0 of the Wikitongues Oral History Template Instantiator
 
-metadatarator=/Users/Amicus/Documents/Work/Active/Wikitongues/Git/Airtable-API/single.js
+# Reads flags
+flagger () {
+  open=false
+  dev=false
+  videos=()
+  for arg in "$@"; do
+    if [[ $arg == "-d" || $arg == "--dev" ]]; then
+      dev=true
+    elif [[ $arg == "-o" || $arg == "--open" ]]; then
+      open=true
+    else
+      videos+=("$arg")
+    fi
+  done
+}
 
 # Method Runner
 video () {
-  videos=()
-  open=false
-  if [ -z "$1" ]; then
+  if [ -z "${videos[*]}" ]; then
     echo "Please specify at least once video ID"
     exit 1
   else
-    for arg in $@; do
-      if ! [[ "$arg" == "-o" ||  "$arg" == "--open" ]]; then
-        directorator "$arg"
-        videos+=("$arg")
-      else
-        open=true
-      fi
+    for arg in ${videos[*]}; do
+      directorator "$arg"
     done
     if [[ $open == true ]]; then
-      for i in "${videos[*]}"; do
-        open $i
+      for arg in ${videos[*]}; do
+        open "$arg"
       done
     fi
   fi
@@ -30,7 +37,7 @@ video () {
 # Instantiate Oral History directory
 directorator () {
   if [ -d "$1" ]; then
-    echo "A directory named '$1' already exists in this location."
+    printf "A directory named %s already exists in this location.\n" "$1"
   else
     for i in thumbnail Premier\ Project; do
       mkdir -p "$1"/raws/"$i"
@@ -38,14 +45,19 @@ directorator () {
     for j in clips converted audio captions; do
       mkdir -p "$1"/raws/footage/"$j"
     done
-    node $metadatarator "$1"
-    echo "Oral History Directory Successfully Created For '$1'"
+    node single.js "$1"
+    printf "Oral History Directory Successfully Created For %s. \n" "$1"
   fi
 }
 
 # Check if repository has changed
-if git diff-index --quiet HEAD --; then
-  video $@
+flagger "$@"
+if [[ $dev == true ]]; then
+  video "$@"
 else
-  echo "Something is out of date. Please pull new changes from Github."
+  if git diff-index --quiet HEAD --; then
+    video "$@"
+  else
+    printf "This reporistory is out of date. Please pull new changes from Github.\n"
+  fi
 fi
