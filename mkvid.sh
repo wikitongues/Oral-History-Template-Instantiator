@@ -66,14 +66,14 @@ directorator () {
 # Check if settings are configured
 if [[ -f ~/wikitongues-config ]]; then
   if [[ -z $method || -z $destination ]]; then
-    echo "Please configure your settings at the top of your mkvid file."
+    printf "Something is wrong with your settings file.\nFrom within the mkvid directory, please run the setup script again: \n> ./setup\n"
   else
     flagger "$@"
     if [[ $dev == true ]]; then
       video "$@"
     else
       # Check if repository has changed
-      if cd $method && git diff-index --quiet HEAD --; then
+      if cd "$method" && git diff-index --quiet HEAD --; then
         video "$@"
       else
         echo "This repository is out of date. Please pull new changes from Github."
