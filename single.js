@@ -1,7 +1,9 @@
 'use strict';
 var Airtable = require('airtable');
 var fs = require('fs');
-require('dotenv').config();
+var local = process.argv[3]
+var destination = process.argv[4]
+require('dotenv').config({ path: local+"/.env" });
 
 var single = process.argv[2];
 var base = new Airtable({apiKey: process.env.APIKEY}).base(process.env.BASE);
@@ -50,7 +52,7 @@ Published to Youtube on: ${record.get('Youtube Publish Schedule')}
 Wikimedia Status: ${record.get('Wikimedia Status')}
 Wiki Commons URL: ${record.get('Wiki Commons URL')}`]
 
-        fs.writeFileSync(`${single}/${record.get('IDv2')}__metadata.txt`, content);
+        fs.writeFileSync(`${destination}/${single}/${record.get('IDv2')}__metadata.txt`, content);
     });
     fetchNextPage();
   } else {

@@ -1,6 +1,14 @@
 #!/bin/bash
 # Version 3.0 of the Wikitongues Oral History Template Instantiator
 
+# ~/wikitongues-config is where the necessary locations for this operation get stored.
+# The file is created by the setup.sh script.
+source ~/wikitongues-config
+# The method address is the absolute path to the directory where this file lives in
+method=$method
+# The destination address is the absolute path to where you want the oral history templates to be created.
+destination=$destination
+
 # Reads flags
 flagger () {
   open=false
@@ -28,7 +36,7 @@ video () {
     done
     if [[ $open == true ]]; then
       for arg in ${videos[*]}; do
-        open "$arg"
+        open "$destination"/"$arg"
       done
     fi
   fi
@@ -36,17 +44,17 @@ video () {
 
 # Instantiate Oral History directory
 directorator () {
-  if [ -d "$1" ]; then
+  if [ -d "$destination"/"$1" ]; then
     printf "A directory named %s already exists in this location.\n" "$1"
   else
     for i in thumbnail Premier\ Project; do
-      mkdir -p "$1"/raws/"$i"
+      mkdir -p "$destination"/"$1"/raws/"$i"
     done
     for j in clips converted audio captions; do
-      mkdir -p "$1"/raws/footage/"$j"
+      mkdir -p "$destination"/"$1"/raws/footage/"$j"
     done
-    node single.js "$1"
-    if [ -d "$1" ]; then
+    node "$method"/single.js "$1" "$method" "$destination"
+    if [ -d "$destination"/"$1" ]; then
       printf "Oral History Directory Successfully Created For %s.\n" "$1"
     else
       echo "Something went wrong"
@@ -54,14 +62,24 @@ directorator () {
   fi
 }
 
-# Check if repository has changed
-flagger "$@"
-if [[ $dev == true ]]; then
-  video "$@"
-else
-  if git diff-index --quiet HEAD --; then
-    video "$@"
+# Runner
+# Check if settings are configured
+if [[ -f ~/wikitongues-config ]]; then
+  if [[ -z $method || -z $destination ]]; then
+    echo "Please configure your settings at the top of your mkvid file."
   else
-    echo "This repository is out of date. Please pull new changes from Github."
+    flagger "$@"
+    if [[ $dev == true ]]; then
+      video "$@"
+    else
+      # Check if repository has changed
+      if cd $method && git diff-index --quiet HEAD --; then
+        video "$@"
+      else
+        echo "This repository is out of date. Please pull new changes from Github."
+      fi
+    fi
   fi
+else
+  printf "\nSettings not configured.\nFrom within the mkvid directory, please run the setup script: \n> ./setup\n"
 fi
