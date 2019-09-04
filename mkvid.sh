@@ -46,7 +46,11 @@ directorator () {
       mkdir -p "$1"/raws/footage/"$j"
     done
     node single.js "$1"
-    printf "Oral History Directory Successfully Created For %s. \n" "$1"
+    if [ -d "$1" ]; then
+      printf "Oral History Directory Successfully Created For %s.\n" "$1"
+    else
+      echo "Something went wrong"
+    fi
   fi
 }
 
@@ -58,6 +62,6 @@ else
   if git diff-index --quiet HEAD --; then
     video "$@"
   else
-    printf "This reporistory is out of date. Please pull new changes from Github.\n"
+    echo "This repository is out of date. Please pull new changes from Github."
   fi
 fi
