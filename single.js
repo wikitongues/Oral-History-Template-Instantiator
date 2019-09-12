@@ -56,7 +56,7 @@ Wiki Commons URL: ${record.get('Wiki Commons URL')}`]
     });
     fetchNextPage();
   } else {
-    console.log(`Warning! ID '${single}' not found on airtable.`)
+    console.log(`\x1b[31mWarning! ID '${single}' not found on airtable.`)
   }
 }, function done(err) {
     if (err) { console.error(err); return; }

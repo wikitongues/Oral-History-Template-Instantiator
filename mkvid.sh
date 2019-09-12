@@ -28,7 +28,7 @@ flagger () {
 # Method Runner
 video () {
   if [ -z "${videos[*]}" ]; then
-    echo "Please specify at least once video ID"
+    echo "\e[33mPlease specify at least once video ID\e[0m"
     exit 1
   else
     for arg in ${videos[*]}; do
@@ -45,7 +45,7 @@ video () {
 # Instantiate Oral History directory
 directorator () {
   if [ -d "$destination"/"$1" ]; then
-    printf "A directory named %s already exists in this location.\n" "$1"
+    printf "\e[31mA directory named\e[0m %s \e[31malready exists in this location.\n\e[0m" "$1"
   else
     for i in thumbnail Premier\ Project; do
       mkdir -p "$destination"/"$1"/raws/"$i"
@@ -55,9 +55,9 @@ directorator () {
     done
     node "$method"/single.js "$1" "$method" "$destination"
     if [ -d "$destination"/"$1" ]; then
-      printf "Oral History Directory Successfully Created For %s.\n" "$1"
+      printf "\e[32mOral History Directory Successfully Created For %s.\n\e[0m" "$1"
     else
-      echo "Something went wrong"
+      echo "\e[31mSomething went wrong\e[0m"
     fi
   fi
 }
@@ -66,7 +66,7 @@ directorator () {
 # Check if settings are configured
 if [[ -f ~/wikitongues-config ]]; then
   if [[ -z $method || -z $destination ]]; then
-    printf "Something is wrong with your settings file.\nFrom within the mkvid directory, please run the setup script again: \n> ./setup\n"
+    printf "\e[31mSomething is wrong with your settings file.\e[0m\nFrom within the mkvid directory, please run the setup script again: \n> ./setup\n"
   else
     flagger "$@"
     if [[ $dev == true ]]; then
@@ -76,10 +76,10 @@ if [[ -f ~/wikitongues-config ]]; then
       if cd "$method" && git diff-index --quiet HEAD --; then
         video "$@"
       else
-        echo "This repository is out of date. Please pull new changes from Github."
+        printf "\e[31mYour 'mkvid' repository is out of date. Please pull new changes from Github.\e[0m"
       fi
     fi
   fi
 else
-  printf "\nSettings not configured.\nFrom within the mkvid directory, please run the setup script: \n> ./setup\n"
+  printf "\e[31m\nSettings not configured.\e[0m\nFrom within the mkvid directory, please run the setup script: \n> ./setup\n"
 fi
