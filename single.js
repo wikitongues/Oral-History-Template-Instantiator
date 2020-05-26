@@ -13,19 +13,19 @@ base('🍩 Oral Histories').select({
     cellFormat: "string",
     timeZone: "America/New_York",
     userLocale: "en-ca",
-    filterByFormula: "IDV2='"+single+"'",
+    filterByFormula: "Identifier='"+single+"'",
     fields: [
-      "IDv2",
-      "Languages by ISO Code",
-      "Languages Used",
-      "Alternate Name",
-      "Speakers",
+      "Identifier",
+      "Languages: ISO Code (639-3)",
+      "Language names",
+      "Languages: Speaker preferred names",
+      "Contributor: Speakers",
       ".self?",
-      "Source",
-      "Video Nation",
-      "Video Territory",
-      "Video Description",
-      "Licenses",
+      "Creator",
+      "Subject: Language Nation of Origin",
+      "Coverage: Video Territory",
+      "Description",
+      "Rights",
       "Youtube Publish Date",
       "Wikimedia Eligibility",
       "Wiki Commons URL"
@@ -33,26 +33,26 @@ base('🍩 Oral Histories').select({
 }).eachPage(function page(records, fetchNextPage) {
   if (!Array.isArray(records) || !!records.length) {
     records.forEach(function(record) {
-        const content = [`Metadata for ${record.get('IDv2')}
+        const content = [`Metadata for ${record.get('Identifier')}
 
-Oral History ID:  ${record.get('IDv2')}
-Languages by ISO 639-3 Code: ${record.get('Languages by ISO Code')}
-Language Names: ${record.get('Languages Used')}
-Alternate Names: ${record.get('Alternate Name')}
-Speakers: ${record.get('Speakers')}
+Oral History ID:  ${record.get('Identifier')}
+Languages by ISO 639-3 Code: ${record.get('Languages: ISO Code (639-3)')}
+Language Names: ${record.get('Language names')}
+Alternate Names: ${record.get('Languages: Speaker preferred names')}
+Speakers: ${record.get('Contributor: Speakers')}
 
-Video Description: ${record.get('Video Description')}
+Video Description: ${record.get('Description') || ''}
 
-Original Submitter: ${record.get('Source')}
-Licenses: ${record.get('Licenses')}
-Video Nation: ${record.get('Video Nation')}
-Video Territory: ${record.get('Video Territory')}
+Original Submitter: ${record.get('Creator')}
+Licenses: ${record.get('Rights')}
+Video Nation: ${record.get('Subject: Language Nation of Origin')}
+Video Territory: ${record.get('Coverage: Video Territory')}
 
-Published to Youtube on: ${record.get('Youtube Publish Schedule')}
-Wikimedia Status: ${record.get('Wikimedia Status')}
+Published to Youtube on: ${record.get('Youtube Publish Date')}
+Wikimedia Status: ${record.get('Wikimedia Eligibility')}
 Wiki Commons URL: ${record.get('Wiki Commons URL')}`]
 
-        fs.writeFileSync(`${destination}/${single}/${record.get('IDv2')}__metadata.txt`, content);
+        fs.writeFileSync(`${destination}/${single}/${record.get('Identifier')}__metadata.txt`, content);
     });
     fetchNextPage();
   } else {
