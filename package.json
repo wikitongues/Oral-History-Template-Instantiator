@@ -4,7 +4,7 @@
   "description": "Wikitongues Oral History Template Instantiator",
   "main": "mkvid.sh",
   "dependencies": {
-    "airtable": "^0.7.0",
+    "airtable": "^0.7.2",
     "dotenv": "^8.0.0"
   },
   "devDependencies": {},
