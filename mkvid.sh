@@ -14,6 +14,7 @@ flagger () {
   open=false
   dev=false
   videos=()
+  identifiers=()
   for arg in "$@"; do
     if [[ $arg == "-d" || $arg == "--dev" ]]; then
       dev=true
@@ -33,9 +34,10 @@ video () {
   else
     for arg in ${videos[*]}; do
       directorator "$arg"
+      renamer "$arg"
     done
     if [[ $open == true ]]; then
-      for arg in ${videos[*]}; do
+      for arg in ${identifiers[*]}; do
         open "$destination"/"$arg"
       done
     fi
@@ -60,6 +62,24 @@ directorator () {
       echo "\e[31mSomething went wrong\e[0m"
     fi
   fi
+}
+
+# Rename directory to S3-compliant identifier
+renamer () {
+  # Convert to ascii characters
+  identifier=$(echo $1 | iconv -f UTF-8 -t ascii//TRANSLIT//ignore)
+
+  # Remove characters left by Mac iconv implementation
+  identifier=${identifier//[\'\^\~\"]/''}
+
+  # Change + to -
+  identifier=${identifier//\+/'-'}
+
+  if [ $identifier != $1 ]; then
+    mv "$destination"/"$1" "$destination"/"$identifier"
+  fi
+
+  identifiers+=("$identifier")
 }
 
 # Runner
