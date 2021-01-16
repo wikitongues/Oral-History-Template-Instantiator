@@ -9,7 +9,7 @@ if (!fs.existsSync(dir)){
 
 var base = new Airtable({apiKey: process.env.APIKEY}).base(process.env.BASE);
 
-base('🍩 Oral Histories').select({
+base('Oral Histories').select({
     // Selecting the first 3 records in Worksheet:
     // maxRecords: 3,
     view: ".LOCMetadataView",

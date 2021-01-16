@@ -8,7 +8,7 @@ require('dotenv').config({ path: local+"/.env" });
 var single = process.argv[2];
 var base = new Airtable({apiKey: process.env.APIKEY}).base(process.env.BASE);
 
-base('🍩 Oral Histories').select({
+base('Oral Histories').select({
     view: ".LOCMetadataView",
     cellFormat: "string",
     timeZone: "America/New_York",
@@ -33,7 +33,7 @@ base('🍩 Oral Histories').select({
 }).eachPage(function page(records, fetchNextPage) {
   if (!Array.isArray(records) || !!records.length) {
     records.forEach(function(record) {
-        const content = [`Metadata for ${record.get('Identifier')}
+        const content = `Metadata for ${record.get('Identifier')}
 
 Oral History ID:  ${record.get('Identifier')}
 Languages by ISO 639-3 Code: ${record.get('Languages: ISO Code (639-3)')}
@@ -50,7 +50,7 @@ Video Territory: ${record.get('Coverage: Video Territory')}
 
 Published to Youtube on: ${record.get('Youtube Publish Date')}
 Wikimedia Status: ${record.get('Wikimedia Eligibility')}
-Wiki Commons URL: ${record.get('Wiki Commons URL')}`]
+Wiki Commons URL: ${record.get('Wiki Commons URL')}`;
 
         fs.writeFileSync(`${destination}/${single}/${record.get('Identifier')}__metadata.txt`, content);
     });
