@@ -96,7 +96,7 @@ if [[ -f ~/wikitongues-config ]]; then
       if cd "$method" && git diff-index --quiet HEAD --; then
         video "$@"
       else
-        printf "\e[31mYour 'mkvid' repository is out of date. Please pull new changes from Github.\e[0m"
+        printf "\e[31mAn update to the code is available. Please run the command 'git pull'.\e[0m"
       fi
     fi
   fi
