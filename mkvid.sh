@@ -6,6 +6,7 @@
 source ~/wikitongues-config
 # The method address is the absolute path to the directory where this file lives in
 method=$method
+metadata=$metadata
 # The destination address is the absolute path to where you want the oral history templates to be created.
 destination=$destination
 
@@ -55,7 +56,7 @@ directorator () {
     for j in clips converted audio captions; do
       mkdir -p "$destination"/"$1"/raws/footage/"$j"
     done
-    node "$method"/single.js "$1" "$method" "$destination"
+    node "$metadata"/single.js "$1" "$method" "$destination"
     if [ -d "$destination"/"$1" ]; then
       printf "\e[32mOral History Directory Successfully Created For %s.\n\e[0m" "$1"
     else
@@ -96,7 +97,7 @@ if [[ -f ~/wikitongues-config ]]; then
       if cd "$method" && git diff-index --quiet HEAD --; then
         video "$@"
       else
-        printf "\e[31mAn update to the code is available. Please run the command 'git pull'.\e[0m"
+        printf "\e[31mAn update to the code is available. Please run the setup script again: \n> ./setup\n"
       fi
     fi
   fi
