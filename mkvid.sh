@@ -34,12 +34,12 @@ video () {
     exit 1
   else
     for arg in ${videos[*]}; do
-      directorator "$arg"
-      renamer "$arg"
+      directorator "$@"
+      renamer "$@"
     done
     if [[ $open == true ]]; then
       for arg in ${identifiers[*]}; do
-        open "$destination"/"$arg"
+        open "$1"/"$2"
       done
     fi
   fi
@@ -47,18 +47,18 @@ video () {
 
 # Instantiate Oral History directory
 directorator () {
-  if [ -d "$destination"/"$1" ]; then
-    printf "\e[31mA directory named\e[0m %s \e[31malready exists in this location.\n\e[0m" "$1"
+  if [ -d "$1"/"$2" ]; then
+    printf "\e[31mA directory named\e[0m %s \e[31malready exists in this location.\n\e[0m" "$2"
   else
     for i in thumbnail Premier\ Project; do
-      mkdir -p "$destination"/"$1"/raws/"$i"
+      mkdir -p "$1"/"$2"/raws/"$i"
     done
     for j in clips converted audio captions; do
-      mkdir -p "$destination"/"$1"/raws/footage/"$j"
+      mkdir -p "$1"/"$2"/raws/footage/"$j"
     done
-    node "$metadata"/single.js "$1" "$method" "$destination"
-    if [ -d "$destination"/"$1" ]; then
-      printf "\e[32mOral History Directory Successfully Created For %s.\n\e[0m" "$1"
+    node "$metadata"/single.js "$2" "$method" "$2"
+    if [ -d "$1"/"$2" ]; then
+      printf "\e[32mOral History Directory Successfully Created For %s.\n\e[0m" "$2"
     else
       echo "\e[31mSomething went wrong\e[0m"
     fi
@@ -76,8 +76,8 @@ renamer () {
   # Change + to -
   identifier=${identifier//\+/'-'}
 
-  if [ $identifier != $1 ]; then
-    mv "$destination"/"$1" "$destination"/"$identifier"
+  if [ $identifier != $2 ]; then
+    mv "$1"/"$2" "$1"/"$identifier"
   fi
 
   identifiers+=("$identifier")
@@ -91,11 +91,11 @@ if [[ -f ~/wikitongues-config ]]; then
   else
     flagger "$@"
     if [[ $dev == true ]]; then
-      video "$@"
+      video "." "$@"
     else
       # Check if repository has changed
       if cd "$method" && git diff-index --quiet HEAD --; then
-        video "$@"
+        video "$destination" "$@"
       else
         printf "\e[31mAn update to the code is available. Please run the setup script again: \n> ./setup\n"
       fi
