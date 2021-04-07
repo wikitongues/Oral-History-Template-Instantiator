@@ -1,19 +1,23 @@
 #!/bin/bash
-# Version 3.0 of the Wikitongues Oral History Template Instantiator
+
+# Version 4.0 of the Wikitongues Oral History Template Instantiator
 
 # ~/wikitongues-config is where the necessary locations for this operation get stored.
 # The file is created by the setup.sh script.
 source ~/wikitongues-config
 # The method address is the absolute path to the directory where this file lives in
 method=$method
-metadata=$metadata
+# The metadata address is the absolute path to where the airtable API script live
+metadataPath=$metadata
 # The destination address is the absolute path to where you want the oral history templates to be created.
 destination=$destination
+airtableConfig=$airtableConfig
 
 # Reads flags
 flagger () {
   open=false
   dev=false
+  makeMetadataFile=true
   videos=()
   identifiers=()
   for arg in "$@"; do
@@ -21,10 +25,16 @@ flagger () {
       dev=true
     elif [[ $arg == "-o" || $arg == "--open" ]]; then
       open=true
+    elif [[ $arg == "--no-metadata" ]]; then
+    	makeMetadataFile=false
     else
       videos+=("$arg")
     fi
   done
+  if [[ ! $airtableConfig || $airtableConfig == false ]]; then
+  	makeMetadataFile=false
+  	echo "\e[33mAirtable API not configured. No metadata file will be automatically produced.\e[0m"
+  fi
 }
 
 # Method Runner
@@ -56,7 +66,9 @@ directorator () {
     for j in clips converted audio captions; do
       mkdir -p "$1"/"$2"/raws/footage/"$j"
     done
-    node "$metadata"/single.js "$2" "$method" "$2"
+    if [[ $makeMetadataFile == true ]]; then
+	    node "$metadataPath"/single.js "$2" "$metadata" "$1"
+		fi    
     if [ -d "$1"/"$2" ]; then
       printf "\e[32mOral History Directory Successfully Created For %s.\n\e[0m" "$2"
     else
@@ -68,7 +80,7 @@ directorator () {
 # Rename directory to S3-compliant identifier
 renamer () {
   # Convert to ascii characters
-  identifier=$(echo $1 | iconv -f UTF-8 -t ascii//TRANSLIT//ignore)
+  identifier=$(echo $2 | iconv -f UTF-8 -t ascii//TRANSLIT//ignore)
 
   # Remove characters left by Mac iconv implementation
   identifier=${identifier//[\'\^\~\"\`]/''}
@@ -94,10 +106,19 @@ if [[ -f ~/wikitongues-config ]]; then
       video "." "$@"
     else
       # Check if repository has changed
-      if cd "$method" && git diff-index --quiet HEAD --; then
-        video "$destination" "$@"
+      if cd "$metadata" && git diff-index --quiet HEAD --; then
+	      video "$destination" "$@"
       else
-        printf "\e[31mAn update to the code is available. Please run the setup script again: \n> ./setup\n"
+      	
+      	read -r -p "An update to the code is available. Would you like to create an oral history folder template with the old version? [y/N] " response
+        case "$response" in
+	      [yY][eE][sS]|[yY])
+					video "$destination" "$@"
+	        ;;
+	      *)
+	        printf "Exiting without changes. To fix this issue, please run the Setup script again: \n$ bash setup.sh\n"
+	        ;;
+	    esac
       fi
     fi
   fi

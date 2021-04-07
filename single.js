@@ -1,11 +1,12 @@
 'use strict';
 var Airtable = require('airtable');
 var fs = require('fs');
+var single = process.argv[2];
 var local = process.argv[3]
 var destination = process.argv[4]
 require('dotenv').config({ path: local+"/.env" });
 
-var single = process.argv[2];
+
 var base = new Airtable({apiKey: process.env.APIKEY}).base(process.env.BASE);
 
 base('Oral Histories').select({
