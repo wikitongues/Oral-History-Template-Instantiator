@@ -350,7 +350,7 @@
 					<key>COMMAND_STRING</key>
 					<string>for f in "$@"
 do
-	/Users/fredericoandrade/Documents/Fred/Wikitongues/Oral-History-Template-Instantiator/mkvid.sh "$f" -o
+	/usr/local/bin/mkvid "$f" -o
 done</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
@@ -614,21 +614,21 @@ done</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>67764C88-8819-4EA0-9E79-AFE60CDF1C2D</key>
+		<key>19EB0E54-62B0-4697-ABAB-09E9DC5B26C6</key>
 		<dict>
 			<key>from</key>
 			<string>B0E5BE34-C0F4-4D0D-AF72-24B57D78B605 - B0E5BE34-C0F4-4D0D-AF72-24B57D78B605</string>
 			<key>to</key>
 			<string>25DF7F38-EEAA-4EB9-8ACD-32F9EC90EAB3 - 25DF7F38-EEAA-4EB9-8ACD-32F9EC90EAB3</string>
 		</dict>
-		<key>C45E60D1-A43A-4C24-9A68-717EC181F01F</key>
+		<key>25D80D59-E360-40C0-96B9-3F252406988D</key>
 		<dict>
 			<key>from</key>
 			<string>F3052CC3-6FE8-43E5-8A2F-173370C24D7F - F3052CC3-6FE8-43E5-8A2F-173370C24D7F</string>
 			<key>to</key>
 			<string>3B3427D4-0F2F-4523-A64A-DF32537F5E4E - 3B3427D4-0F2F-4523-A64A-DF32537F5E4E</string>
 		</dict>
-		<key>D3C95AE0-4C3C-4801-82DB-7778314F8795</key>
+		<key>2BDD36E0-F846-4825-9B90-95123FC253FB</key>
 		<dict>
 			<key>from</key>
 			<string>3B3427D4-0F2F-4523-A64A-DF32537F5E4E - 3B3427D4-0F2F-4523-A64A-DF32537F5E4E</string>

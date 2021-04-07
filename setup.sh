@@ -67,8 +67,6 @@ else
 	printf 'metadata="'"$(pwd)"'"\n' >> ~/wikitongues-config ;
 	printf "\nSetup complete.\nSettings file can be located at ~/wikitongues-config\n\nPreview below:\n" ;
 
-	preview	;
-
 	if [[ ! -f ./.env ]]; then
 		printf "\nAccess to the Airtable database is necessary for the automatic creation of metadata files.\n"
 		
@@ -88,5 +86,8 @@ else
         abort ;
         ;;
     esac
+  else
+  	echo "airtableConfig=true" >> ~/wikitongues-config ;
 	fi
+	preview	;
 fi
