@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# todo 
+# pass flags to app 
+
 # Version 4.0 of the Wikitongues Oral History Template Instantiator
 
 # ~/wikitongues-config is where the necessary locations for this operation get stored.
