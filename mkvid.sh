@@ -9,6 +9,10 @@ method=$method
 # The destination address is the absolute path to where you want the oral history templates to be created.
 destination=$destination
 
+source $metadata/.env
+APIKEY=$APIKEY
+BASE=$BASE
+
 # Reads flags
 flagger () {
   open=false
@@ -55,14 +59,68 @@ directorator () {
     for j in clips converted audio captions; do
       mkdir -p "$destination"/"$1"/raws/footage/"$j"
     done
-    node "$method"/single.js "$1" "$method" "$destination"
-    if [ -d "$destination"/"$1" ]; then
-      printf "\e[32mOral History Directory Successfully Created For %s.\n\e[0m" "$1"
+    if [[ $makeMetadataFile == true ]]; then
+	    node "$metadataPath"/single.js "$2" "$metadata" "$1"
+	    metadataMaker $@
+		fi    
+    if [ -d "$1"/"$2" ]; then
+      printf "\e[32mOral History Directory Successfully Created For %s.\n\e[0m" "$2"
     else
       echo "\e[31mSomething went wrong\e[0m"
     fi
   fi
 }
+
+metadataMaker () {
+	cd $2
+	curl -s https://api.airtable.com/v0/$BASE/Oral%20Histories\?filterByFormula\="identifier='$2'" -H "Authorization: Bearer $APIKEY" | jq -r '.records[]["fields"]' > metadata_full.json 
+	cat metadata_full.json | jq -rc '{ "Oral History ID": ."Identifier", 
+	"Languages by ISO 639-3 Code": [."Languages: ISO Code (639-3)"[]], 
+	"Language Names": [."Language names"[]], 
+	"Alternate Names": ."Languages: Speaker preferred names", 
+	"Speakers": [."Contributor: Speakers"[]], 
+	"Video Description": ."Description", 
+	"Original Submitter": [."Creator"[]], 
+	"Licenses": [."Rights"[]], 
+	"Video Nation": [."Subject: Language Nation of Origin"[]], 
+	"Video Territory": [."Coverage: Video Territory"[]], 
+	"Published to Youtube on": ."Youtube Publish Date", 
+	"Wikimedia Status": ."Wikimedia Eligibility", 
+	"Wiki Commons URL": ."Wiki Commons URL" }' > metadata_processing.json
+
+	printf "Metadata for $2\n\n" > output.txt
+	cat metadata_processing.json | sed $'s/[{}]//g ; s/[^httpsFile]:/: /g ; s/null,"/null\\\n"/g; s/","/"\\\n"/g ; s/"//g' >> output.txt
+	
+	# Map secondary params
+	for i in "Languages" "Speakers" "Submitter" "Licenses" "Nation"; do
+		grep "$i" output.txt | cut -d ':' -f2- | xargs echo $i= | sed 's/ //g' >> keys.tmp
+	done
+
+	# Query secondary params
+	source keys.tmp
+	lan=$(curl -s https://api.airtable.com/v0/$BASE/Languages/$Languages -H "Authorization: Bearer $APIKEY" | jq -r '.["fields"] | .Identifier')
+	spe=$(curl -s https://api.airtable.com/v0/$BASE/Contributors/$Speakers -H "Authorization: Bearer $APIKEY" | jq -r '.["fields"] | .ID')
+	sub=$(curl -s https://api.airtable.com/v0/$BASE/Contributors/$Submitter -H "Authorization: Bearer $APIKEY" | jq -r '.["fields"] | .ID')
+	lic=$(curl -s https://api.airtable.com/v0/$BASE/Rights/$Licenses -H "Authorization: Bearer $APIKEY" | jq -r '.["fields"] | .Name')
+	nat=$(curl -s https://api.airtable.com/v0/$BASE/Languages/$Nation -H "Authorization: Bearer $APIKEY" | jq -r '.["fields"] | .Polities')
+	sed -i '' -e "s/^Languages by ISO 639-3 Code: $Languages/Languages by ISO 639-3 Code: $lan/g" \
+		-e "s/^Speakers: $Speakers/Speakers: $spe/g" \
+		-e "s/^Original Submitter: $Submitter/Original Submitter: $sub/g" \
+		-e "s/^Licenses: $Licenses/Licenses: $lic/g" \
+		-e "s/^Video Nation: $Nation/Video Nation: $nat/g" output.txt	
+	
+	# Add empty lines for formatting
+	# sed -i '' -e $'s/^Video Description:/\\\nVideo Description:/g' \
+	# 	-e  $'s/^Original Submitter:/\\\nOriginal Submitter:/g' \
+	# 	-e $'s/^Published to Youtube on:/\\\nPublished to Youtube on:/g' output.txt
+
+
+	# rm keys.tmp metadata_full.json metadata_processing.json
+	# mv output.txt "$2__metadata.txt"
+
+	cd ..
+}
+
 
 # Rename directory to S3-compliant identifier
 renamer () {
