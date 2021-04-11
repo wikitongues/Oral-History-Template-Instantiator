@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# todo 
+# pass flags to app 
+
 # Version 4.0 of the Wikitongues Oral History Template Instantiator
 
 # ~/wikitongues-config is where the necessary locations for this operation get stored.
@@ -106,20 +109,20 @@ if [[ -f ~/wikitongues-config ]]; then
       video "." "$@"
     else
       # Check if repository has changed
-      if cd "$metadata" && git diff-index --quiet HEAD --; then
-	      video "$destination" "$@"
-      else
+      # if cd "$metadata" && git diff-index --quiet HEAD --; then
+	    video "$destination" "$@"
+     #  else
       	
-      	read -r -p "An update to the code is available. Would you like to create an oral history folder template with the old version? [y/N] " response
-        case "$response" in
-	      [yY][eE][sS]|[yY])
-					video "$destination" "$@"
-	        ;;
-	      *)
-	        printf "Exiting without changes. To fix this issue, please run the Setup script again: \n$ bash setup.sh\n"
-	        ;;
-	    esac
-      fi
+     #  	read -r -p "An update to the code is available. Would you like to create an oral history folder template with the old version? [y/N] " response
+     #    case "$response" in
+	    #   [yY][eE][sS]|[yY])
+					# video "$destination" "$@"
+	    #     ;;
+	    #   *)
+	    #     printf "Exiting without changes. To fix this issue, please run the Setup script again: \n$ bash setup.sh\n"
+	    #     ;;
+	    # esac
+     #  fi
     fi
   fi
 else

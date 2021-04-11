@@ -292,7 +292,7 @@
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>309.000000:356.000000</string>
+				<string>309.000000:536.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Set Value of Variable.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -348,9 +348,9 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>COMMAND_STRING</key>
-					<string>for f in "$@"
-do
-	/usr/local/bin/mkvid "$f" -o
+					<string>echo "$@"
+for f in "$1"; do
+	/usr/local/bin/mkvid "$f" -o 
 done</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
@@ -375,6 +375,8 @@ done</string>
 				</array>
 				<key>Class Name</key>
 				<string>RunShellScriptAction</string>
+				<key>IgnoresInput</key>
+				<false/>
 				<key>InputUUID</key>
 				<string>C3238057-981F-4C87-90ED-FCB8D7CDBADF</string>
 				<key>Keywords</key>
@@ -464,7 +466,7 @@ done</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>309.000000:538.000000</string>
+				<string>309.000000:770.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -496,6 +498,7 @@ done</string>
 						<key>tokenizedValue</key>
 						<array>
 							<string>$(8A58AE4D-F05B-4397-A599-107287857AF5)</string>
+							<string> </string>
 						</array>
 					</dict>
 					<key>subtitle</key>
@@ -527,7 +530,7 @@ done</string>
 				<key>ActionParameters</key>
 				<dict>
 					<key>message</key>
-					<string>$(8A58AE4D-F05B-4397-A599-107287857AF5)</string>
+					<string>$(8A58AE4D-F05B-4397-A599-107287857AF5) </string>
 					<key>subtitle</key>
 					<string>Oral History folders created</string>
 					<key>title</key>
@@ -604,7 +607,7 @@ done</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>309.000000:727.000000</string>
+				<string>309.000000:1139.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Display Notification.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -614,21 +617,21 @@ done</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>19EB0E54-62B0-4697-ABAB-09E9DC5B26C6</key>
-		<dict>
-			<key>from</key>
-			<string>B0E5BE34-C0F4-4D0D-AF72-24B57D78B605 - B0E5BE34-C0F4-4D0D-AF72-24B57D78B605</string>
-			<key>to</key>
-			<string>25DF7F38-EEAA-4EB9-8ACD-32F9EC90EAB3 - 25DF7F38-EEAA-4EB9-8ACD-32F9EC90EAB3</string>
-		</dict>
-		<key>25D80D59-E360-40C0-96B9-3F252406988D</key>
+		<key>1EB0B809-7467-4DCE-8E06-43721438ED92</key>
 		<dict>
 			<key>from</key>
 			<string>F3052CC3-6FE8-43E5-8A2F-173370C24D7F - F3052CC3-6FE8-43E5-8A2F-173370C24D7F</string>
 			<key>to</key>
 			<string>3B3427D4-0F2F-4523-A64A-DF32537F5E4E - 3B3427D4-0F2F-4523-A64A-DF32537F5E4E</string>
 		</dict>
-		<key>2BDD36E0-F846-4825-9B90-95123FC253FB</key>
+		<key>55AEC8D0-A278-4546-B151-92A51FD0310E</key>
+		<dict>
+			<key>from</key>
+			<string>B0E5BE34-C0F4-4D0D-AF72-24B57D78B605 - B0E5BE34-C0F4-4D0D-AF72-24B57D78B605</string>
+			<key>to</key>
+			<string>25DF7F38-EEAA-4EB9-8ACD-32F9EC90EAB3 - 25DF7F38-EEAA-4EB9-8ACD-32F9EC90EAB3</string>
+		</dict>
+		<key>E0BCC00B-4A29-4829-B79E-DC7921EDA433</key>
 		<dict>
 			<key>from</key>
 			<string>3B3427D4-0F2F-4523-A64A-DF32537F5E4E - 3B3427D4-0F2F-4523-A64A-DF32537F5E4E</string>
@@ -645,6 +648,34 @@ done</string>
 			<string>com.apple.Automator.Variable.Storage</string>
 			<key>name</key>
 			<string>Oral History</string>
+		</dict>
+		<dict>
+			<key>UUID</key>
+			<string>B08D3B59-C5F5-4A9B-AE70-2B0F80CE9822</string>
+			<key>identifier</key>
+			<string>com.apple.Automator.Variable.AppleScript</string>
+			<key>name</key>
+			<string>MethodOptions</string>
+			<key>value</key>
+			<string>{"--open","--dev","--no-metadata"}</string>
+		</dict>
+		<dict>
+			<key>UUID</key>
+			<string>AF3D8909-8BB1-4752-950E-538B6965127A</string>
+			<key>identifier</key>
+			<string>com.apple.Automator.Variable.AppleScript</string>
+			<key>name</key>
+			<string>AppleScript 1</string>
+			<key>value</key>
+			<string>"Text"</string>
+		</dict>
+		<dict>
+			<key>UUID</key>
+			<string>CF6B0601-37B3-46B2-A284-3A53A58EE9DE</string>
+			<key>identifier</key>
+			<string>com.apple.Automator.Variable.Storage</string>
+			<key>name</key>
+			<string>Storage</string>
 		</dict>
 	</array>
 	<key>workflowMetaData</key>
