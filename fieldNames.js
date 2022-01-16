@@ -1,0 +1,14 @@
+exports.ID = "Identifier";
+exports.LANGUAGE_ISO = "Language [ISO Code 639-3]";
+exports.LANGUAGE_ETHNOLOGUE_NAME = "Language [Ethnologue Name]";
+exports.LANGUAGE_SPEAKER_PREFERRED_NAME = "Language [Speaker preferred name]";
+exports.CREATOR_SPEAKERS = "Creator [Speakers]";
+exports.SELF = ".self?";
+exports.CREATOR = "Creator";
+exports.SUBJECT_LANGUAGE_NATION = "Subject [Language: Nation of Origin]";
+exports.COVERAGE_VIDEO_TERRITORY = "Coverage [Video Territory]";
+exports.DESCRIPTION = "Description";
+exports.RIGHTS = "Rights";
+exports.YOUTUBE_PUBLISH_DATE = "Youtube Publish Date";
+exports.WIKIMEDIA_ELIGIBILITY = "Wikimedia Eligibility";
+exports.COVERAGE_WIKIMEDIA_COMMONS = "Coverage [Wikimedia Commons]";
