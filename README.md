@@ -110,3 +110,11 @@ Identifier/
 │   └── thumbnail/
 └── Identifier__metadata.txt    Metadata retrieved from Airtable
 ```
+
+### Dev Mode
+
+For development, run in dev mode to save oral history directories to the repository folder, and bypass the git version check:
+
+```
+./mkvid.sh "Identifier" -d
+```

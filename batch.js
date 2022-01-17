@@ -1,3 +1,5 @@
+var fieldNames = require('./fieldNames');
+
 var Airtable = require('airtable');
 var fs = require('fs');
 require('dotenv').config();
@@ -17,20 +19,20 @@ base('Oral Histories').select({
     timeZone: "America/New_York",
     userLocale: "en-ca",
     fields: [
-      "IDv2",
-      "Languages by ISO Code",
-      "Languages Used",
-      "Alternate Name",
-      "Speakers",
-      ".self?",
-      "Source",
-      "Video Nation",
-      "Video Territory",
-      "Video Description",
-      "Licenses",
-      "Youtube Publish Schedule",
-      "Wikimedia Status",
-      "Wiki Commons URL"
+      fieldNames.ID,
+      fieldNames.LANGUAGE_ISO,
+      fieldNames.LANGUAGE_ETHNOLOGUE_NAME,
+      fieldNames.LANGUAGE_SPEAKER_PREFERRED_NAME,
+      fieldNames.CREATOR_SPEAKERS,
+      fieldNames.SELF,
+      fieldNames.CREATOR,
+      fieldNames.SUBJECT_LANGUAGE_NATION,
+      fieldNames.COVERAGE_VIDEO_TERRITORY,
+      fieldNames.DESCRIPTION,
+      fieldNames.RIGHTS,
+      fieldNames.YOUTUBE_PUBLISH_DATE,
+      fieldNames.WIKIMEDIA_ELIGIBILITY,
+      fieldNames.COVERAGE_WIKIMEDIA_COMMONS
     ]
 }).eachPage(function page(records, fetchNextPage) {
     // This function (`page`) will get called for each page of records.
@@ -38,23 +40,23 @@ base('Oral Histories').select({
     records.forEach(function(record) {
         const content = [`Metadata for ${record.get('IDv2')}
 
-Oral History ID:  ${record.get('IDv2')}
-Languages by ISO 639-3 Code: ${record.get('Languages by ISO Code')}
-Language Names: ${record.get('Languages Used')}
-Alternate Names: ${record.get('Alternate Name')}
-Speakers: ${record.get('Speakers')}
+Oral History ID:  ${record.get(fieldNames.ID)}
+Languages by ISO 639-3 Code: ${record.get(fieldNames.LANGUAGE_ISO)}
+Language Names: ${record.get(fieldNames.LANGUAGE_ETHNOLOGUE_NAME)}
+Alternate Names: ${record.get(fieldNames.LANGUAGE_SPEAKER_PREFERRED_NAME)}
+Speakers: ${record.get(fieldNames.CREATOR_SPEAKERS)}
 
-Video Description: ${record.get('Video Description')}
+Video Description: ${record.get(fieldNames.DESCRIPTION) || ''}
 
-Original Submitter: ${record.get('Source')}
-Licenses: ${record.get('Licenses')}
-Video Nation: ${record.get('Video Nation')}
-Video Territory: ${record.get('Video Territory')}
+Original Submitter: ${record.get(fieldNames.CREATOR)}
+Licenses: ${record.get(fieldNames.RIGHTS)}
+Video Nation: ${record.get(fieldNames.SUBJECT_LANGUAGE_NATION)}
+Video Territory: ${record.get(fieldNames.COVERAGE_VIDEO_TERRITORY)}
 
-Published to Youtube on: ${record.get('Youtube Publish Schedule')}
-Wikimedia Status: ${record.get('Wikimedia Status')}
-Wiki Commons URL: ${record.get('Wiki Commons URL')}`]
-
+Published to Youtube on: ${record.get(fieldNames.YOUTUBE_PUBLISH_DATE)}
+Wikimedia Status: ${record.get(fieldNames.WIKIMEDIA_ELIGIBILITY)}
+Wiki Commons URL: ${record.get(fieldNames.COVERAGE_WIKIMEDIA_COMMONS)}`]
+        
         fs.writeFileSync(`dump/${record.get('IDv2')}__metadata.txt`, content);
         console.log('wrote', record.get('IDv2'));
     });
