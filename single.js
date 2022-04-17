@@ -7,6 +7,7 @@ var fs = require('fs');
 var single = process.argv[2];
 var local = process.argv[3]
 var destination = process.argv[4]
+var fileIdentifier = process.argv[5]
 require('dotenv').config({ path: local+"/.env" });
 
 
@@ -56,7 +57,7 @@ Published to Youtube on: ${record.get(fieldNames.YOUTUBE_PUBLISH_DATE)}
 Wikimedia Status: ${record.get(fieldNames.WIKIMEDIA_ELIGIBILITY)}
 Wiki Commons URL: ${record.get(fieldNames.COVERAGE_WIKIMEDIA_COMMONS)}`;
 
-        fs.writeFileSync(`${destination}/${single}/${record.get(fieldNames.ID)}__metadata.txt`, content);
+        fs.writeFileSync(`${destination}/${fileIdentifier}/${record.get(fieldNames.ID)}__metadata.txt`, content);
     });
     fetchNextPage();
   } else {

@@ -36,54 +36,68 @@ flagger () {
   done
   if [[ ! $airtableConfig || $airtableConfig == false ]]; then
   	makeMetadataFile=false
-  	echo "\e[33mAirtable API not configured. No metadata file will be automatically produced.\e[0m"
+  	printf "\e[33mAirtable API not configured. No metadata file will be automatically produced.\e[0m\n"
   fi
 }
 
 # Method Runner
 video () {
+  destination="$1"
+
   if [ -z "${videos[*]}" ]; then
-    echo "\e[33mPlease specify at least once video ID\e[0m"
+    printf "\e[33mPlease specify at least once video ID\e[0m\n"
     exit 1
-  else
-    for arg in ${videos[*]}; do
-      directorator "$@"
-      renamer "$@"
+  fi
+
+  for arg in ${videos[*]}; do
+    directorator "$destination" "$arg"
+  done
+  if [[ $open == true ]]; then
+    for id in ${identifiers[*]}; do
+      open "$destination"/"$id"
     done
-    if [[ $open == true ]]; then
-      for arg in ${identifiers[*]}; do
-        open "$1"/"$2"
-      done
-    fi
   fi
 }
 
 # Instantiate Oral History directory
 directorator () {
-  if [ -d "$1"/"$2" ]; then
-    printf "\e[31mA directory named\e[0m %s \e[31malready exists in this location.\n\e[0m" "$2"
+  destination="$1"
+  ohId="$2"
+
+  identifier=$(renamer "$destination" "$ohId")
+  identifiers+=("$identifier")
+
+  if [ "$identifier" != "$ohId" ]; then
+    printf "\e[33mDirectory for %s is named %s for archival compatibility.\n\e[0m" "$ohId" "$identifier"
+  fi
+
+  if [ -d "$destination"/"$ohId" ]; then
+    printf "\e[31mA directory named\e[0m %s \e[31malready exists in this location.\n\e[0m" "$ohId"
   else
     for i in thumbnail Premier\ Project; do
-      mkdir -p "$1"/"$2"/raws/"$i"
+      mkdir -p "$destination"/"$ohId"/raws/"$i"
     done
     for j in clips converted audio captions; do
-      mkdir -p "$1"/"$2"/raws/footage/"$j"
+      mkdir -p "$destination"/"$ohId"/raws/footage/"$j"
     done
     if [[ $makeMetadataFile == true ]]; then
-	    node "$metadataPath"/single.js "$2" "$metadata" "$1"
+	    node "$metadataPath"/single.js "$ohId" "$metadata" "$destination" "$identifier"
 		fi    
-    if [ -d "$1"/"$2" ]; then
-      printf "\e[32mOral History Directory Successfully Created For %s.\n\e[0m" "$2"
+    if [ -d "$destination"/"$ohId" ]; then
+      printf "\e[32mOral History Directory Successfully Created For %s.\n\e[0m" "$ohId"
     else
-      echo "\e[31mSomething went wrong\e[0m"
+      printf "\e[31mSomething went wrong\e[0m\n"
     fi
   fi
 }
 
-# Rename directory to S3-compliant identifier
+# Rename directory to S3-compliant identifier for LOC archival
 renamer () {
+  destination="$1"
+  ohId="$2"
+
   # Convert to ascii characters
-  identifier=$(echo $2 | iconv -f UTF-8 -t ascii//TRANSLIT//ignore)
+  identifier=$(echo $ohId | iconv -f UTF-8 -t ascii//TRANSLIT//ignore)
 
   # Remove characters left by Mac iconv implementation
   identifier=${identifier//[\'\^\~\"\`]/''}
@@ -91,11 +105,7 @@ renamer () {
   # Change + to -
   identifier=${identifier//\+/'-'}
 
-  if [ $identifier != $2 ]; then
-    mv "$1"/"$2" "$1"/"$identifier"
-  fi
-
-  identifiers+=("$identifier")
+  echo "$identifier"
 }
 
 # Runner
@@ -106,11 +116,11 @@ if [[ -f ~/wikitongues-config ]]; then
   else
     flagger "$@"
     if [[ $dev == true ]]; then
-      video "." "$@"
+      video "."
     else
       # Check if repository has changed
       # if cd "$metadata" && git diff-index --quiet HEAD --; then
-	    video "$destination" "$@"
+	    video "$destination"
      #  else
       	
      #  	read -r -p "An update to the code is available. Would you like to create an oral history folder template with the old version? [y/N] " response

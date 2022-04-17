@@ -1,7 +1,7 @@
 # Wikitongues
 # Oral History Template Instantiator
 
-This tool sets up the folder structure for a new Wikitongues oral history.
+This tool sets up the folder structure for new Wikitongues Oral Histories and Lexicons.
 
 ## Prerequisites
 
@@ -91,12 +91,11 @@ The most important commands to know are:
 Now you are ready to run the Oral History Template Instantiator.
 
 ## Usage
-
+### Oral History Template
 Run this command, replacing Identifier with an actual oral history identifier from Airtable.
 ```
-./mkvid.sh "Identifier"
+mkvid "Identifier"
 ```
-
 It will create a folder with this structure in the destination directory that you specified when running the setup script.
 ```
 Identifier/
@@ -108,6 +107,17 @@ Identifier/
 │   │   └── converted/
 │   ├── Premier Project/
 │   └── thumbnail/
+└── Identifier__metadata.txt    Metadata retrieved from Airtable
+```
+
+### Lexicon Template
+Run this command, replacing Identifier with an actual lexicon identifier from Airtable.
+```
+mklex "Identifier"
+```
+It will create a folder with this structure in the destination directory that you specified when running the setup script.
+```
+Identifier/
 └── Identifier__metadata.txt    Metadata retrieved from Airtable
 ```
 
